@@ -1,5 +1,7 @@
 # Webcam Image Capture and Email Sender
 
+⚠️ Ethical Usage Warning:
+This project is intended only for ethical and legal purposes. Any misuse, unauthorized surveillance, or violation of privacy laws is strictly prohibited. Ensure that you obtain explicit consent before capturing or processing any images. The developers are not responsible for any unethical or illegal use of this software.
 ## Overview
 This project is a **web-based application** that captures an image from the user's webcam, sends it to a backend server using Flask, and emails the captured image to a specified recipient. It integrates **HTML, JavaScript, Flask, and SMTP** to provide a seamless user experience for image capture and email notifications.
 
