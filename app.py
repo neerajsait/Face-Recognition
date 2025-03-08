@@ -1,130 +1,47 @@
-import cv2
-import numpy as np
-import pickle
-import os
-import mysql.connector
-from flask import Flask, request, jsonify, render_template_string
-from deepface import DeepFace
+from flask import Flask, request, jsonify, render_template
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
+import base64
 
 app = Flask(__name__)
 
-# ✅ Database Connection
-def get_db_connection():
-    return mysql.connector.connect(
-        host="localhost", 
-        user="root", 
-        password="neer@jsai6", 
-        database="df"
-    )
+# Email configuration (replace with your details)
+EMAIL_ADDRESS = "notorioushehe@gmail.com"
+EMAIL_PASSWORD = "dcrk zgpo mcrj wfeb"  # Use your App Password
+RECIPIENT_EMAIL = "tneerajvenkatasai@gmail.com"
 
-# ✅ Home Page
 @app.route('/')
-def home():
-    return render_template_string('''
-        <h1>Face Recognition API</h1>
-        <ul>
-            <li><a href="/register">Register</a></li>
-            <li><a href="/login">Login</a></li>
-        </ul>
-    ''')
+def index():
+    return render_template('index.html')
 
-# ✅ Register Page (Frontend)
-@app.route('/register', methods=['GET'])
-def register_page():
-    return render_template_string('''
-        <h2>Register</h2>
-        <input type="text" id="username" placeholder="Enter Username" required>
-        <button onclick="captureImage('/register')">Register with Face</button>
-        <script>
-            function captureImage(url) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(stream => {
-                        const video = document.createElement("video");
-                        video.srcObject = stream;
-                        video.play();
-                        setTimeout(() => {
-                            const canvas = document.createElement("canvas");
-                            canvas.width = 640;
-                            canvas.height = 480;
-                            const ctx = canvas.getContext("2d");
-                            ctx.drawImage(video, 0, 0, 640, 480);
-                            stream.getTracks().forEach(track => track.stop());
-
-                            canvas.toBlob(blob => {
-                                const formData = new FormData();
-                                formData.append("username", document.getElementById("username").value);
-                                formData.append("image", blob);
-
-                                fetch(url, { method: "POST", body: formData })
-                                    .then(response => response.json())
-                                    .then(data => alert(data.message))
-                                    .catch(error => alert("Error: " + error));
-                            }, "image/jpeg");
-                        }, 2000);
-                    })
-                    .catch(() => alert("Permission denied! Camera access is required."));
-            }
-        </script>
-    ''')
-
-# ✅ Register User (Backend)
-@app.route('/register', methods=['POST'])
-def register_user():
-    username = request.form.get("username")
-    if not username:
-        return jsonify({"error": "Username is required!"}), 400
-
-    image_file = request.files.get("image")
-    if not image_file:
-        return jsonify({"error": "No image provided!"}), 400
-
-    image_bytes = np.asarray(bytearray(image_file.read()), dtype=np.uint8)
-    frame = cv2.imdecode(image_bytes, cv2.IMREAD_COLOR)
+@app.route('/send-image', methods=['POST'])
+def send_image():
+    data = request.get_json()
+    image_data = data.get('image')
 
     try:
-        embedding = DeepFace.represent(frame, model_name="Facenet", detector_backend="retinaface", enforce_detection=False)[0]['embedding']
+        image_bytes = base64.b64decode(image_data.split(',')[1])
     except Exception as e:
-        return jsonify({"error": "Face not detected. Please try again!"}), 400
+        return jsonify({'status': 'error', 'message': 'Invalid image data'}), 400
 
-    embedding_blob = pickle.dumps(embedding)
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO login (username, face_embedding) VALUES (%s, %s)", (username, embedding_blob))
-    conn.commit()
-    conn.close()
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = RECIPIENT_EMAIL
+    msg['Subject'] = 'Captured Image'
 
-    return jsonify({"message": "User registered successfully!"})
-
-# ✅ Login User (Backend)
-@app.route('/login', methods=['POST'])
-def login_user():
-    image_file = request.files.get("image")
-    if not image_file:
-        return jsonify({"error": "No image provided!"}), 400
-
-    image_bytes = np.asarray(bytearray(image_file.read()), dtype=np.uint8)
-    frame = cv2.imdecode(image_bytes, cv2.IMREAD_COLOR)
+    image = MIMEImage(image_bytes, name='user-image.png')
+    msg.attach(image)
 
     try:
-        live_embedding = DeepFace.represent(frame, model_name="Facenet", detector_backend="retinaface", enforce_detection=False)[0]['embedding']
-    except:
-        return jsonify({"error": "Face not detected. Try again!"}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT username, face_embedding FROM login")
-    users = cursor.fetchall()
-    conn.close()
-    
-    for user in users:
-        username = user[0]
-        db_embedding = pickle.loads(user[1])
-        distance = np.linalg.norm(np.array(live_embedding) - np.array(db_embedding))
-
-        if distance < 0.6:
-            return jsonify({"message": f"Login Successful! Welcome {username}"}), 200
-
-    return jsonify({"message": "Face Not Recognized. Access Denied."}), 401
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            server.send_message(msg)
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
