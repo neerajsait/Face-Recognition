@@ -7,9 +7,9 @@ import base64
 app = Flask(__name__)
 
 # Email configuration (replace with your details)
-EMAIL_ADDRESS = "notorioushehe@gmail.com"
-EMAIL_PASSWORD = "dcrk zgpo mcrj wfeb"  # Use your App Password
-RECIPIENT_EMAIL = "tneerajvenkatasai@gmail.com"
+EMAIL_ADDRESS = "your-email@gmail.com"
+EMAIL_PASSWORD = "your-app-password"
+RECIPIENT_EMAIL = "recipient-email@gmail.com"
 
 @app.route('/')
 def index():
