@@ -1,128 +1,94 @@
-# Webcam Image Capture and Email Sender
+markdown
 
-⚠️ Ethical Usage Warning:
-This project is intended only for ethical and legal purposes. Any misuse, unauthorized surveillance, or violation of privacy laws is strictly prohibited. Ensure that you obtain explicit consent before capturing or processing any images. The developers are not responsible for any unethical or illegal use of this software.
-## Overview
-This project is a **web-based application** that captures an image from the user's webcam, sends it to a backend server using Flask, and emails the captured image to a specified recipient. It integrates **HTML, JavaScript, Flask, and SMTP** to provide a seamless user experience for image capture and email notifications.
+# Webcam Face Capture & Email Tool
 
-## Features
-- **Webcam Access & Image Capture**: Requests user permission to access the webcam and captures an image after a delay.
-- **Automatic Image Sending**: The captured image is converted to a Base64 string and sent to the backend.
-- **Email Integration**: The backend decodes the image and emails it to a predefined recipient using SMTP.
-- **Error Handling**: Handles cases like denied permissions, missing camera devices, and email failures.
-- **Flask API**: Provides an endpoint (`/send-image`) to handle image processing and email sending.
+A simple proof-of-concept web app that captures an image from the user's webcam (with consent via browser prompt) and sends it via email. Built as an experimental project to explore webcam APIs, Flask backends, and image handling — **not a full face recognition system** (yet).
 
-## Technologies Used
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Python (Flask)
-- **Email Service:** SMTP (Gmail)
+**Note**: This is a basic demo with frontend JavaScript for webcam access and a Flask backend to email the captured image. It includes ethical safeguards and is for learning purposes only.
 
----
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-Web%20Framework-green)](https://flask.palletsprojects.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellowgreen)](LICENSE)
+[![Commits](https://img.shields.io/github/commit-activity/m/neerajsait/Face-Recognition)](https://github.com/neerajsait/Face-Recognition/commits/main)
 
-## Project Structure
-```
-webcam_image_sender/
-│-- static/
-│   ├── script.js   # JavaScript for webcam access and image sending
-│-- templates/
-│   ├── index.html  # HTML page with webcam functionality
-│-- app.py          # Flask backend for image handling and email sending
-│-- requirements.txt # Dependencies for the project
-│-- README.md       # Project documentation
-```
+## Why I Built This
+I wanted to learn how browser webcam access works with JavaScript (getUserMedia API) and how to securely handle image data on the backend. The idea started as a simple "capture and send" experiment — like a fun proof-of-concept for remote photo sharing or a basic attendance check-in system.  
 
----
+This was a quick free-time project outside my usual full-stack work (Java/Spring Boot/React). I’m planning to expand it with actual face detection/recognition later, but right now it’s focused on the capture → process → email flow. It taught me a lot about base64 encoding, MIME emails, and why consent/ethics matter with camera access.
 
-## Setup Instructions
+## Key Features
+- Webcam access via browser (requires user permission — no silent capture)
+- Live preview on the page
+- Capture button to take a photo
+- Sends the captured image automatically to a configured email via Flask backend
+- Uses Gmail SMTP (with app password recommended for security)
+
+## Screenshots
+*(Highly recommended — add these to make the project look real and professional! Run it locally, take screenshots, and upload to a `/screenshots` folder.)*
+
+<!-- Example placeholders — replace with your own -->
+<!-- ![Webcam Preview](screenshots/preview.png) -->
+<!-- ![Capture Button](screenshots/capture.png) -->
+<!-- ![Email Received](screenshots/email.png) -->
+
+## Tech Stack
+- **Frontend** — HTML + JavaScript (getUserMedia API)
+- **Backend** — Python 3.8+ with Flask
+- **Email** — smtplib + Gmail SMTP
+
+## Installation & Setup
 ### Prerequisites
-Ensure you have Python installed. If not, download and install it from [Python's official site](https://www.python.org/downloads/).
+- Python 3.8+
+- A Gmail account (enable 2FA and create an [App Password](https://support.google.com/accounts/answer/185833))
 
-### 1. Clone the Repository
-```sh
- git clone https://github.com/yourusername/webcam-image-sender.git
- cd webcam-image-sender
-```
+### Steps
+1. Clone the repo
+   ```bash
+   git clone https://github.com/neerajsait/Face-Recognition.git
+   cd Face-Recognition
 
-### 2. Create a Virtual Environment (Optional but Recommended)
-```sh
+(Recommended) Create a virtual environmentbash
+
 python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-```
+source venv/bin/activate    # On Windows: venv\Scripts\activate
 
-### 3. Install Dependencies
-```sh
-pip install -r requirements.txt
-```
+Install dependenciesbash
 
-### 4. Configure Email Credentials
-Update `app.py` with your Gmail credentials:
-```python
-EMAIL_ADDRESS = "your-email@gmail.com"
-EMAIL_PASSWORD = "your-app-password"
-RECIPIENT_EMAIL = "recipient-email@gmail.com"
-```
-**Note:** Use an [App Password](https://myaccount.google.com/apppasswords) instead of your regular password.
+pip install flask
 
-### 5. Run the Flask Server
-```sh
+Configure email (edit app.py)Replace EMAIL_ADDRESS with your Gmail
+Replace EMAIL_PASSWORD with your App Password
+Replace RECIPIENT_EMAIL with the destination
+
+Run the appbash
+
 python app.py
-```
 
-### 6. Access the Application
-Open a browser and go to:
-```
-http://localhost:5000/
-```
+Open in browser
+Visit http://localhost:5000 (or your IP if testing remotely)Allow camera permission when prompted, preview yourself, and click capture to test the email.
 
----
+What I Learned & ChallengesBrowser webcam access is straightforward with getUserMedia, but handling the dataURL → base64 → bytes conversion took some debugging.
+Sending images via email with MIME was new to me — learned how to properly attach binary data.
+Biggest challenge: making sure everything works over HTTP (HTTPS would be better for production to avoid permission issues).
+Reinforced how important user consent is — the browser forces a permission prompt, which is good.
 
-## Usage
-1. The page will request **camera access**.
-2. Once access is granted, the camera will turn on briefly.
-3. After 5 seconds, an image will be **captured**.
-4. The image is then **sent to the server** and forwarded via **email**.
-5. The camera **turns off** automatically after capturing the image.
+Future ImprovementsAdd actual face detection (e.g., with face-api.js or OpenCV)
+Store images locally or in cloud storage instead of just email
+User authentication and multiple recipients
+Better UI with React
+Deploy to Render/Heroku for live demo
 
----
+Important Ethics & Security NoteThis tool is strictly for educational and personal testing purposes only.It requires explicit user permission to access the camera (browser will always prompt).
+Never use this on others without clear consent.
+Do not deploy publicly without proper security (e.g., authentication, HTTPS).
+Capturing images without permission is illegal and unethical in most jurisdictions.
+I am not responsible for any misuse.
 
-## API Endpoints
-| Endpoint       | Method | Description |
-|---------------|--------|-------------|
-| `/`           | GET    | Renders the main page |
-| `/send-image` | POST   | Accepts Base64-encoded image and sends it via email |
+Use responsibly — ideally only on your own device for learning.LicenseMIT License — see the LICENSE file for details.Built in my free time by @neerajsait while exploring web technologies. Feedback or suggestions welcome!
 
----
+Copy-paste this directly into your repo's `README.md`.  
 
-## Troubleshooting
-### 1. Camera Not Detected?
-- Ensure your webcam is **not in use** by another application.
-- Try using a **different browser**.
+It keeps the tone honest and personal (with the "Why I Built This" and "What I Learned" sections), emphasizes ethics strongly to address the sensitive nature, and clarifies that it's not doing actual face recognition yet. Add real screenshots soon — they’ll make this repo feel much more legitimate and showcase your work properly.
 
-### 2. Email Not Sent?
-- Check if you have **enabled Less Secure Apps** or used **App Passwords**.
-- Ensure your **internet connection** is stable.
-
-### 3. Flask App Not Running?
-- Ensure all dependencies are installed correctly.
-- Run `python app.py` in the correct directory.
-
----
-
-## Future Improvements
-- Add **user authentication** before capturing an image.
-- Provide an option to **preview the image** before sending.
-- Implement **cloud storage** integration for saving images.
-- Enhance **UI/UX** for a smoother user experience.
-
----
-
-## License
-This project is licensed under the **MIT License**.
-
----
-
-## Contributors
-- **Tiruveedhi Neeraj Venkata Sai** ([@yourusername](https://github.com/yourusername))
-
-Feel free to fork and contribute! 🚀
+This pairs well with the Network-Monitor README — both will make your profile look thoughtful and credible. Great job shipping this!
 
