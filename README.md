@@ -86,9 +86,3 @@ I am not responsible for any misuse.
 
 Use responsibly — ideally only on your own device for learning.LicenseMIT License — see the LICENSE file for details.Built in my free time by @neerajsait while exploring web technologies. Feedback or suggestions welcome!
 
-Copy-paste this directly into your repo's `README.md`.  
-
-It keeps the tone honest and personal (with the "Why I Built This" and "What I Learned" sections), emphasizes ethics strongly to address the sensitive nature, and clarifies that it's not doing actual face recognition yet. Add real screenshots soon — they’ll make this repo feel much more legitimate and showcase your work properly.
-
-This pairs well with the Network-Monitor README — both will make your profile look thoughtful and credible. Great job shipping this!
-
