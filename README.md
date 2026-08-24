@@ -1,3 +1,38 @@
+# Face Recognition
+
+> Face recognition web application using JavaScript and AI APIs
+
+Built with JavaScript and focused on ai, computer-vision, face-recognition, javascript.
+
+## About this project
+
+This repository is part of **Neeraj Sai's** growing collection of software projects, experiments, and learning builds. It reflects a practical, curious approach to creating useful products and understanding how they work under the hood.
+
+## Getting started
+
+Clone the repository and follow the setup instructions for the project's framework or language:
+
+```bash
+git clone https://github.com/neerajsait/Face-Recognition.git
+cd Face-Recognition
+```
+
+Check the project files for the available run commands and configuration requirements.
+
+## Links
+
+[Repository](https://github.com/neerajsait/Face-Recognition)
+
+## Author
+
+**Tiruveedhi Neeraj Venkata Sai**
+
+- GitHub: [@neerajsait](https://github.com/neerajsait)
+- Portfolio: [neeraj's portfolio](https://github.com/neerajsait/portfoliomain)
+
+
+## Existing project documentation
+
 markdown
 
 # Webcam Face Capture & Email Tool
@@ -85,4 +120,3 @@ Capturing images without permission is illegal and unethical in most jurisdictio
 I am not responsible for any misuse.
 
 Use responsibly — ideally only on your own device for learning.LicenseMIT License — see the LICENSE file for details.Built in my free time by @neerajsait while exploring web technologies. Feedback or suggestions welcome!
-
